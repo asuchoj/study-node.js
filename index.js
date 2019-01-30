@@ -1,3 +1,4 @@
-let text = 'Hello Word';
+let Car = require('module/car').CarClass;
 
-console.log(text);
+var bmv = new Car("BMV");
+bmv.logName();
