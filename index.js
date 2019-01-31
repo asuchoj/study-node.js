@@ -1,20 +1,28 @@
-var EventEmitter = require('events').EventEmitter;
+let http = require('http');
+let url = require('url');
+let fs = require('fs');
 
-var dispatcher = new EventEmitter();
+let server = new http.Server;
 
-dispatcher.on('error', function (err) {
-    console.log("Error");
+server.listen(80, '127.0.0.1');
+
+server.on('request', function (req, res) {
+    let parseUrl = url.parse(req.url, true);
+
+    fs.readFile(getPageNameByPAth(parseUrl.pathname) + '.html', function (err, data) {
+        if(err) throw new Error(err);
+
+        res.end(data);
+    })
 });
 
-dispatcher.on('connect', function (data) {
-    console.log('Connect 1', data);
-});
-
-dispatcher.on('connect', function (data) {
-    console.log('Connect 2', data);
-});
-
-
-dispatcher.emit('connect', {foo: 1});
-
-dispatcher.emit('error', new Error('Something went wrong!'));
+function getPageNameByPAth(path) {
+    switch (path) {
+        case '/' :
+        case '/home':
+            return 'index';
+        case '/about':
+            return 'about';
+        default: return 'error'
+    }
+}
